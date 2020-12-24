@@ -30,6 +30,11 @@ int main(int argc, char* argv) {
     return 0;
 }
 
+struct list_context { 
+    // head element
+    list_ptr head;
+};
+
 void list_demo() {
     // initialize current context (stack)
     struct list_context* ctx = (struct list_context*)calloc(1, sizeof(struct list_context));

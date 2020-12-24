@@ -17,11 +17,6 @@ typedef struct list {
     void*  payload;
 } list;
 
-struct list_context { 
-    // head element
-    list_ptr head;
-};
-
 struct list_vtable {
     /* initialize context */
     void (*init)(list_ptr* const current);
