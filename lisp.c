@@ -1,18 +1,12 @@
+#define DEBUG
+
 #include <stdlib.h>
+#include <stddef.h>
+#include <stdio.h>
 #include "lisp.h"
 #include "list.h"
 
 #include "str.h"
-
-#define DEBUG
-
-#ifdef DEBUG
-
-#include <stddef.h>
-#include <stdio.h>
-
-typedef long long unsigned int ADDR;
-#endif
 
 void list_demo();
 
@@ -23,7 +17,7 @@ int main(int argc, char* argv) {
     ctx->run = str_run;
     ctx->free = str_free;
 
-    ctx->self = "Hello, World!";
+    ctx->self = "Hello, World!\n";
 
     ctx->alloc(ctx);
     ctx->run(ctx);
@@ -57,42 +51,42 @@ void list_demo() {
         return;
     }
     list->push(current, payload);
-    list_print_head(current);
+    list->print_head(current);
     list->push(current, ++payload);
-    list_print_head(current);
+    list->print_head(current);
     list->push(current, ++payload);
-    list_print_head(current);
+    list->print_head(current);
     list->push(current, ++payload);
-    list_print_head(current);
+    list->print_head(current);
     list->push(current, ++payload);
-    list_print_head(current);
+    list->print_head(current);
 #ifdef DEBUG
     printf("\n");
 #endif
 #ifdef DEBUG
-    list_print(current);
+    list->print(current);
 #endif
     void* q_pop0 = list->pop(current); 
 #ifdef DEBUG
-    list_print(current);
+    list->print(current);
 #endif
     void* q_pop1 = list->pop(current); 
 #ifdef DEBUG
-    list_print(current);
+    list->print(current);
 #endif
     void* q_pop2 = list->pop(current); 
 #ifdef DEBUG
-    list_print(current);
+    list->print(current);
 #endif
     void* q_pop3 = list->pop(current); 
     list->push(current, q_pop3);
     q_pop3 = list->pop(current); 
 #ifdef DEBUG
-    list_print(current);
+    list->print(current);
 #endif
     void* q_pop4 = list->pop(current); 
 #ifdef DEBUG
-    list_print(current);
+    list->print(current);
 #endif
 
     // destroy list

@@ -17,14 +17,6 @@ typedef struct list {
     void*  payload;
 } list;
 
-typedef struct mutable_list * mutable_list_ptr;
-typedef struct mutable_list {
-    /* points to previous node */
-    mutable_list_ptr prev;
-    /* payload */
-    void*  payload;
-} mutation_list;
-
 struct list_context { 
     // head element
     list_ptr head;

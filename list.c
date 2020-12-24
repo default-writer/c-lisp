@@ -1,9 +1,13 @@
+#define DEBUG
+
 #include <stdlib.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 #include "lisp.h"
-
 #include "list.h"
+
+typedef long long unsigned int ADDR;
 
 void list_alloc(list_ptr ctx) {
     
@@ -27,6 +31,16 @@ const struct list_vtable list_vt = {
     .print = list_print
 };
 
+/* special version of list_ptr for mutations (removed *const, allowing pointer assiment operator) */
+typedef struct mutable_list * mutable_list_ptr;
+
+/* special version of list for mutations (removed *const, allowing pointer assiment operator) */
+typedef struct mutable_list {
+    /* points to previous node */
+    mutable_list_ptr prev;
+    /* payload */
+    void*  payload;
+} mutation_list;
 
 /* initializes the new context's head element */
 /* as a result, new memory block will be allocated */
