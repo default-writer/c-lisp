@@ -48,14 +48,12 @@ void list_init(readonly_list_ptr* const current) {
 /* as a result, items counter will increase */
 void list_push(readonly_list_ptr* const current, void* payload) {
     /* stores into pre-allocated value newly allocated memory buffer pointer */
-    assignable_list_ptr item = calloc(1, sizeof(struct list));
+    readonly_list_ptr item = calloc(1, sizeof(struct list));
     /* sets the new data into allocated memory buffer */
     *((assignable_ptr*)&item->payload) = payload;
     /* pushes new item on top of the stack in current context */
-    /* get current context's head */
-    readonly_list_ptr head = *((assignable_list_ptr*)current);
     /* assigns item's prev pointer to head pointer */
-    *((assignable_list_ptr*)&item->prev) = *((assignable_list_ptr*)current);
+    *((assignable_list_ptr*)&item->prev) = *current;
     /* advances position of head pointer to the new head */
     *((assignable_list_ptr*)current) = item;
 }
@@ -66,7 +64,7 @@ void list_push(readonly_list_ptr* const current, void* payload) {
 /* as a result, header will be set to previous position, represented as head's reference to previos head */
 void* list_pop(readonly_list_ptr* const current) {
     /* get current context's head */
-    readonly_list_ptr head = *((readonly_list_ptr*)current);
+    readonly_list_ptr head = *current;
     /* if we call method on empty stack, do not return head element, return null element by convention */
     if (head == 0 || head->prev == 0) {
         /* returns default element as null element */
@@ -97,7 +95,7 @@ void* list_pop(readonly_list_ptr* const current) {
 void list_destroy(readonly_list_ptr* const current) {
     /* get current context's head */
     /* assigns currently selected item pointer to temporary */
-    assignable_list_ptr tmp = *((assignable_list_ptr*)current);
+    readonly_list_ptr tmp = *current;
     /* if not already freed */
     if (tmp != 0) {
         /* until we found element with no parent (previous) node */
@@ -143,7 +141,7 @@ void list_print(readonly_list_ptr* const current) {
     // sets the counter
     int i = 0; 
     // assigns current's head pointer to the temporary
-    assignable_list_ptr tmp = head;
+    readonly_list_ptr tmp = head;
     if (tmp != 0)
     {
         // until we found root element (element with no previous element reference)
@@ -153,7 +151,7 @@ void list_print(readonly_list_ptr* const current) {
             printf("%d: 0x%llx 0x%llx\n", ++i, (ADDR)tmp, (ADDR)tmp->payload);
 #endif
             // remember temprary's prior pointer value to temporary
-            tmp = tmp->prev;
+            *((assignable_list_ptr*)&tmp) = tmp->prev;
         } while (tmp != 0/*root*/);
     }
     // stop on root element
