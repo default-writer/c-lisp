@@ -24,6 +24,9 @@ void list_free(readonly_list_ptr ctx) {
 typedef void * assignable_ptr;
 typedef struct list * assignable_list_ptr;
 
+#define MUTATE_PTR(a, b) *((assignable_ptr*)a) = b
+#define MUTATE_LIST_PTR(a, b) *((assignable_list_ptr*)a) = b
+
 /* list vtable */
 const struct list_vtable list_vt = {
     .init = list_init,
@@ -39,7 +42,7 @@ const struct list_vtable list_vt = {
 /* current context pointer set to zero */
 void list_init(readonly_list_ptr* const current) {
     /* sets current context's head element */
-    *((assignable_list_ptr*)current) = calloc(1, sizeof(struct list));
+    MUTATE_LIST_PTR(current, calloc(1, sizeof(struct list)));
     /* sets current context's counter to zero */
 }
 
@@ -50,12 +53,12 @@ void list_push(readonly_list_ptr* const current, void* payload) {
     /* stores into pre-allocated value newly allocated memory buffer pointer */
     readonly_list_ptr item = calloc(1, sizeof(struct list));
     /* sets the new data into allocated memory buffer */
-    *((assignable_ptr*)&item->payload) = payload;
+    MUTATE_PTR(&item->payload, payload);
     /* pushes new item on top of the stack in current context */
     /* assigns item's prev pointer to head pointer */
-    *((assignable_list_ptr*)&item->prev) = *current;
+    MUTATE_LIST_PTR(&item->prev, *current);
     /* advances position of head pointer to the new head */
-    *((assignable_list_ptr*)current) = item;
+    MUTATE_LIST_PTR(current, item);
 }
 
 /* pop existing element at the top of the stack/queue/list */
@@ -73,15 +76,15 @@ void* list_pop(readonly_list_ptr* const current) {
     /* gets previos pointer */
     readonly_list_ptr prev = head->prev;
     /* rewinds head pointer to previous pointer value */
-    *((assignable_list_ptr*)current) = prev;
+    MUTATE_LIST_PTR(current, prev);
     /* assigns current stack head pointer to temporary */
     readonly_list_ptr ptr = head;
     /* gets temporary pointer value */
     void* payload = ptr->payload;
     /* detouches the pointer from the list */
 #ifndef DIRTY
-    *((assignable_list_ptr*)&ptr->prev) = 0;
-    *((assignable_ptr*)&ptr->payload) = 0;
+    MUTATE_LIST_PTR(&ptr->prev, 0);
+    MUTATE_LIST_PTR(&ptr->payload, 0);
 #endif
     /* free temporary pointer value */
     free(ptr);
@@ -106,16 +109,16 @@ void list_destroy(readonly_list_ptr* const current) {
             readonly_list_ptr prev = tmp->prev;
 #ifndef DIRTY
             /* zero all pointers */
-            *((assignable_list_ptr*)&ptr->prev) = 0;
-            *((assignable_ptr*)&ptr->payload) = 0;
+            MUTATE_LIST_PTR(&ptr->prev, 0);
+            MUTATE_PTR(&ptr->payload, 0);
 #endif
             /* free temporary pointer value */
             free(ptr);
             /* advances temporary pointer value to the next item */
-            *((assignable_list_ptr*)&tmp) = prev;
+            MUTATE_LIST_PTR(&tmp, prev);
         } while (tmp != 0);
         /* all stack items are processed */
-        *((assignable_list_ptr*)current) = 0;
+        MUTATE_LIST_PTR(current, 0);
     }
 }
 
@@ -151,7 +154,7 @@ void list_print(readonly_list_ptr* const current) {
             printf("%d: 0x%llx 0x%llx\n", ++i, (ADDR)tmp, (ADDR)tmp->payload);
 #endif
             // remember temprary's prior pointer value to temporary
-            *((assignable_list_ptr*)&tmp) = tmp->prev;
+            MUTATE_LIST_PTR(&tmp, tmp->prev);
         } while (tmp != 0/*root*/);
     }
     // stop on root element
