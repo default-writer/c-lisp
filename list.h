@@ -3,16 +3,16 @@
 
 #include "lisp.h"
 
-void list_alloc(list_ptr ctx);
-void list_parse(list_ptr ctx);
-void list_free(list_ptr ctx);
+void list_alloc(readonly_list_ptr ctx);
+void list_parse(readonly_list_ptr ctx);
+void list_free(readonly_list_ptr ctx);
 
-void list_init(list_ptr* const current);
-void list_push(list_ptr* const current, void* payload);
-void* list_pop(list_ptr* const current);
-void list_destroy(list_ptr* const current);
-void list_print_head(list_ptr* const current);
-void list_print(list_ptr* const current);
+void list_init(readonly_list_ptr* const current);
+void list_push(readonly_list_ptr* const current, void* payload);
+void* list_pop(readonly_list_ptr* const current);
+void list_destroy(readonly_list_ptr* const current);
+void list_print_head(readonly_list_ptr* const current);
+void list_print(readonly_list_ptr* const current);
 
 const struct list_vtable list_vt;
 

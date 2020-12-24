@@ -9,27 +9,28 @@ typedef struct str {
     void (*free)(str_context);
 } str;
 
-typedef struct list * const list_ptr;
+typedef void * const readonly_ptr;
+typedef struct list * const readonly_list_ptr;
 typedef struct list {
     /* points to previous node */
-    list_ptr prev;
+    readonly_list_ptr prev;
     /* payload */
-    void*  payload;
+    readonly_ptr payload;
 } list;
 
 struct list_vtable {
     /* initialize context */
-    void (*init)(list_ptr* const current);
+    void (*init)(readonly_list_ptr* const current);
     /* push item on current context (stack) */
-    void (*push)(list_ptr* const current, void* item);
+    void (*push)(readonly_list_ptr* const current, void* item);
     /* pop item on current context (stack) */
-    void* (*pop)(list_ptr* const current);
+    void* (*pop)(readonly_list_ptr* const current);
     /* destroy context */
-    void (*destroy)(list_ptr* const current);
+    void (*destroy)(readonly_list_ptr* const current);
     /* print head */
-    void (*print_head)(list_ptr* const current);
+    void (*print_head)(readonly_list_ptr* const current);
     /* print list */
-    void (*print)(list_ptr* const current);
+    void (*print)(readonly_list_ptr* const current);
 };
 
 const struct list_vtable list_vt;

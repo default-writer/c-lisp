@@ -30,9 +30,9 @@ int main(int argc, char* argv) {
     return 0;
 }
 
-struct list_context { 
+struct list_context {
     // head element
-    list_ptr head;
+    readonly_list_ptr head;
 };
 
 void list_demo() {
@@ -41,12 +41,12 @@ void list_demo() {
     // create list
     const struct list_vtable* list = &list_vt;
 
-    list_ptr ptr = ctx->head;
+    readonly_list_ptr ptr = ctx->head;
 
     // initialize list
     list->init(&ptr);
 
-    list_ptr* const current = &ptr;
+    readonly_list_ptr* const current = &ptr;
 
     void* payload = (void*)0xdeadbeef;
     void* is_null[] = {
