@@ -112,7 +112,7 @@ void list_destroy(readonly_list_ptr* const current) {
             /* free temporary pointer value */
             free(ptr);
             /* advances temporary pointer value to the next item */
-            tmp = prev;
+            *((assignable_list_ptr*)&tmp) = prev;
         } while (tmp != 0);
         /* all stack items are processed */
         *((assignable_list_ptr*)current) = 0;
