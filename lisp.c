@@ -44,7 +44,7 @@ void list_demo() {
     // create list
     const struct list_vtable* list = &list_vt;
 
-    list_ptr ptr = (list_ptr)ctx->head;
+    list_ptr ptr = ctx->head;
 
     // initialize list
     list->init(&ptr);

@@ -27,7 +27,7 @@ typedef struct mutable_list {
 
 struct list_context { 
     // head element
-    mutable_list_ptr head;
+    list_ptr head;
 };
 
 struct list_vtable {
