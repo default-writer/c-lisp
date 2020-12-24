@@ -11,6 +11,8 @@ void list_init(list_ptr* const current);
 void list_push(list_ptr* const current, void* payload);
 void* list_pop(list_ptr* const current);
 void list_destroy(list_ptr* const current);
+void list_print_head(list_ptr* const current);
+void list_print(list_ptr* const current);
 
 const struct list_vtable list_vt;
 

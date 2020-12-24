@@ -39,6 +39,10 @@ struct list_vtable {
     void* (*pop)(list_ptr* const current);
     /* destroy context */
     void (*destroy)(list_ptr* const current);
+    /* print head */
+    void (*print_head)(list_ptr* const current);
+    /* print list */
+    void (*print)(list_ptr* const current);
 };
 
 const struct list_vtable list_vt;

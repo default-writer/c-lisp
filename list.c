@@ -22,7 +22,9 @@ const struct list_vtable list_vt = {
     .init = list_init,
     .push = list_push,
     .pop = list_pop,
-    .destroy = list_destroy
+    .destroy = list_destroy,
+    .print_head = list_print_head,
+    .print = list_print
 };
 
 
@@ -111,4 +113,42 @@ void list_destroy(list_ptr* const current) {
         /* all stack items are processed */
         *((mutable_list_ptr*)current) = 0;
     }
+}
+
+
+// print head on current context (stack)
+void list_print_head(list_ptr* const current) {
+    // get current context's head
+    list_ptr tmp = *current;
+#ifdef DEBUG
+    // visualise item
+    printf("alloc: 0x%llx 0x%llx\n", (ADDR)tmp, (ADDR)tmp->payload);
+#endif
+}
+
+// print all stack trace to output
+// in a single loop, print out all elements except root element (which does not have a payload)
+// as a result, all stack will be printed in last-to-first order (reverse)
+void list_print(list_ptr* const current) {
+    // get current context's head
+    mutable_list_ptr head = *((mutable_list_ptr*)current);
+    // get root element
+    // struct list *root = ctx->root;
+    // sets the counter
+    int i = 0; 
+    // assigns current's head pointer to the temporary
+    mutable_list_ptr tmp = head;
+    if (tmp != 0)
+    {
+        // until we found root element (element with no previous element reference)
+        do {
+#ifdef DEBUG
+            // debug output of memory dump
+            printf("%d: 0x%llx 0x%llx\n", ++i, (ADDR)tmp, (ADDR)tmp->payload);
+#endif
+            // remember temprary's prior pointer value to temporary
+            tmp = tmp->prev;
+        } while (tmp != 0/*root*/);
+    }
+    // stop on root element
 }
