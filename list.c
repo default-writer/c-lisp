@@ -26,7 +26,7 @@ readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
 void* list_pop(readonly_list_ptr* const current);
 void list_destroy(readonly_list_ptr* const current);
 void list_print_head(readonly_list_ptr const current);
-void list_print(readonly_list_ptr* const current);
+void list_print(readonly_list_ptr const current);
 
 /* list vtable */
 const struct list_vtable list_vt = {
@@ -134,15 +134,14 @@ void list_print_head(readonly_list_ptr const current) {
 // print all stack trace to output
 // in a single loop, print out all elements except root element (which does not have a payload)
 // as a result, all stack will be printed in last-to-first order (reverse)
-void list_print(readonly_list_ptr* const current) {
+void list_print(readonly_list_ptr const current) {
     // get current context's head
-    readonly_list_ptr head = *current;
     // get root element
     // struct list *root = ctx->root;
     // sets the counter
     int i = 0; 
     // assigns current's head pointer to the temporary
-    readonly_list_ptr tmp = head;
+    readonly_list_ptr tmp = current;
     if (tmp != 0)
     {
         // until we found root element (element with no previous element reference)

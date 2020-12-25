@@ -60,29 +60,29 @@ void list_demo() {
     printf("\n");
 #endif
 #ifdef DEBUG
-    list->print(current);
+    list->print(ptr);
 #endif
     void* q_pop0 = list->pop(current); 
 #ifdef DEBUG
-    list->print(current);
+    list->print(ptr);
 #endif
     void* q_pop1 = list->pop(current); 
 #ifdef DEBUG
-    list->print(current);
+    list->print(ptr);
 #endif
     void* q_pop2 = list->pop(current); 
 #ifdef DEBUG
-    list->print(current);
+    list->print(ptr);
 #endif
     void* q_pop3 = list->pop(current); 
     MUTATE_LIST_PTR(ptr, list->push(ptr, q_pop3));
     q_pop3 = list->pop(current); 
 #ifdef DEBUG
-    list->print(current);
+    list->print(ptr);
 #endif
     void* q_pop4 = list->pop(current); 
 #ifdef DEBUG
-    list->print(current);
+    list->print(ptr);
 #endif
 
     // destroy list

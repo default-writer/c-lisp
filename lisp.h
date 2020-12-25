@@ -30,7 +30,7 @@ struct list_vtable {
     /* print head */
     void (*print_head)(readonly_list_ptr const current);
     /* print list */
-    void (*print)(readonly_list_ptr* const current);
+    void (*print)(readonly_list_ptr const current);
 };
 
 const struct list_vtable list_vt;
