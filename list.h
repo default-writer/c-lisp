@@ -3,11 +3,7 @@
 
 #include "lisp.h"
 
-typedef void * assignable_ptr;
-typedef struct list * assignable_list_ptr;
-
-#define MUTATE_PTR(a, b) *((assignable_ptr*)&a) = b
-#define MUTATE_LIST_PTR(a, b) *((assignable_list_ptr*)&a) = b
+void list_demo();
 
 const struct list_vtable list_vt;
 

@@ -8,6 +8,11 @@
 #include "list.h"
 
 typedef long long unsigned int ADDR;
+typedef void * assignable_ptr;
+typedef struct list * assignable_list_ptr;
+
+#define MUTATE_PTR(a, b) *((assignable_ptr*)&a) = b
+#define MUTATE_LIST_PTR(a, b) *((assignable_list_ptr*)&a) = b
 
 void list_alloc(readonly_list_ptr ctx);
 void list_parse(readonly_list_ptr ctx);
@@ -159,4 +164,63 @@ void list_print(readonly_list_ptr const current) {
         } while (tmp != 0/*root*/);
     }
     // stop on root element
+}
+
+void list_demo() {
+    // create list
+    const struct list_vtable* list = &list_vt;
+
+    // initialize list
+    readonly_list_ptr ptr = list->init();
+
+    readonly_list_ptr const current = ptr;
+
+    void* payload = (void*)0xdeadbeef;
+    void* is_null[] = {
+        list->pop(current)
+    };
+    if (0 != is_null[0]) {
+        return;
+    }
+    MUTATE_LIST_PTR(ptr, list->push(ptr, payload));
+    list->print_head(ptr);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
+    list->print_head(ptr);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
+    list->print_head(ptr);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
+    list->print_head(ptr);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
+    list->print_head(ptr);
+#ifdef DEBUG
+    printf("\n");
+#endif
+#ifdef DEBUG
+    list->print(ptr);
+#endif
+    void* q_pop0 = list->pop(current); 
+#ifdef DEBUG
+    list->print(ptr);
+#endif
+    void* q_pop1 = list->pop(current); 
+#ifdef DEBUG
+    list->print(ptr);
+#endif
+    void* q_pop2 = list->pop(current); 
+#ifdef DEBUG
+    list->print(ptr);
+#endif
+    void* q_pop3 = list->pop(current); 
+    MUTATE_LIST_PTR(ptr, list->push(ptr, q_pop3));
+    q_pop3 = list->pop(current); 
+#ifdef DEBUG
+    list->print(ptr);
+#endif
+    void* q_pop4 = list->pop(current); 
+#ifdef DEBUG
+    list->print(ptr);
+#endif
+
+    // destroy list
+    list->destroy(ptr);
 }
