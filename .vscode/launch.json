@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "lldb - Build and debug",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/lisp",
+            "args": []
+        },
+        {
             "type": "gdb",
             "request": "launch",
             "name": "gdb - Build and debug",
@@ -13,7 +20,7 @@
             "valuesFormatting": "parseText",
             "preLaunchTask": "C/C++: gcc build active file",
             "internalConsoleOptions": "openOnSessionStart",
-            "miDebuggerPath": "/usr/bin/gdb"            
+            "miDebuggerPath": "/usr/bin/gdb"
         },
         {
             "name": "gcc - Build and debug",
