@@ -22,7 +22,7 @@ struct list_vtable {
     /* initialize context */
     readonly_list_ptr (*init)();
     /* push item on current context (stack) */
-    void (*push)(readonly_list_ptr* const current, void* item);
+    readonly_list_ptr (*push)(readonly_list_ptr const current, void* item);
     /* pop item on current context (stack) */
     void* (*pop)(readonly_list_ptr* const current);
     /* destroy context */

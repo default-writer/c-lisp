@@ -21,12 +21,6 @@ void list_free(readonly_list_ptr ctx) {
     
 }
 
-typedef void * assignable_ptr;
-typedef struct list * assignable_list_ptr;
-
-#define MUTATE_PTR(a, b) *((assignable_ptr*)&a) = b
-#define MUTATE_LIST_PTR(a, b) *((assignable_list_ptr*)&a) = b
-
 /* list vtable */
 const struct list_vtable list_vt = {
     .init = list_init,
@@ -48,16 +42,16 @@ readonly_list_ptr list_init() {
 /* allocates a memory for provided payload  */
 /* at current context, data payload stored at allocated memory buffer */
 /* as a result, items counter will increase */
-void list_push(readonly_list_ptr* const current, void* payload) {
+readonly_list_ptr list_push(readonly_list_ptr const current, void* payload) {
     /* stores into pre-allocated value newly allocated memory buffer pointer */
     readonly_list_ptr item = list_init();
     /* sets the new data into allocated memory buffer */
     MUTATE_PTR(item->payload, payload);
     /* pushes new item on top of the stack in current context */
     /* assigns item's prev pointer to head pointer */
-    MUTATE_LIST_PTR(item->prev, *current);
+    MUTATE_LIST_PTR(item->prev, current);
     /* advances position of head pointer to the new head */
-    MUTATE_LIST_PTR(*current, item);
+    return item;
 }
 
 /* pop existing element at the top of the stack/queue/list */

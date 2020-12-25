@@ -36,6 +36,7 @@ void list_demo() {
 
     // initialize list
     readonly_list_ptr ptr = list->init();
+
     readonly_list_ptr* const current = &ptr;
 
     void* payload = (void*)0xdeadbeef;
@@ -45,15 +46,15 @@ void list_demo() {
     if (0 != is_null[0]) {
         return;
     }
-    list->push(current, payload);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, payload));
     list->print_head(current);
-    list->push(current, ++payload);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
     list->print_head(current);
-    list->push(current, ++payload);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
     list->print_head(current);
-    list->push(current, ++payload);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
     list->print_head(current);
-    list->push(current, ++payload);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
     list->print_head(current);
 #ifdef DEBUG
     printf("\n");
@@ -74,7 +75,7 @@ void list_demo() {
     list->print(current);
 #endif
     void* q_pop3 = list->pop(current); 
-    list->push(current, q_pop3);
+    MUTATE_LIST_PTR(ptr, list->push(ptr, q_pop3));
     q_pop3 = list->pop(current); 
 #ifdef DEBUG
     list->print(current);
