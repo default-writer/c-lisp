@@ -37,7 +37,7 @@ void list_demo() {
     // initialize list
     readonly_list_ptr ptr = list->init();
 
-    readonly_list_ptr* const current = &ptr;
+    readonly_list_ptr const current = ptr;
 
     void* payload = (void*)0xdeadbeef;
     void* is_null[] = {

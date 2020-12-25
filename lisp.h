@@ -24,7 +24,7 @@ struct list_vtable {
     /* push item on current context (stack) */
     readonly_list_ptr (*push)(readonly_list_ptr const current, void* item);
     /* pop item on current context (stack) */
-    void* (*pop)(readonly_list_ptr* const current);
+    void* (*pop)(readonly_list_ptr const current);
     /* destroy context */
     void (*destroy)(readonly_list_ptr const current);
     /* print head */

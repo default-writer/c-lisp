@@ -27,7 +27,7 @@ void list_free(readonly_list_ptr ctx) {
 
 readonly_list_ptr list_init();
 readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
-void* list_pop(readonly_list_ptr* const current);
+void* list_pop(readonly_list_ptr const current);
 void list_destroy(readonly_list_ptr const current);
 void list_print_head(readonly_list_ptr const current);
 void list_print(readonly_list_ptr const current);
@@ -69,9 +69,9 @@ readonly_list_ptr list_push(readonly_list_ptr const current, void* payload) {
 /* at current context, existing head will be removed out of stack */
 /* for the new stack header, correcponding values will be fixed */
 /* as a result, header will be set to previous position, represented as head's reference to previos head */
-void* list_pop(readonly_list_ptr* const current) {
+void* list_pop(readonly_list_ptr const current) {
     /* get current context's head */
-    readonly_list_ptr head = *current;
+    readonly_list_ptr head = current;
     /* if we call method on empty stack, do not return head element, return null element by convention */
     if (head == 0 || head->prev == 0) {
         /* returns default element as null element */
@@ -80,7 +80,7 @@ void* list_pop(readonly_list_ptr* const current) {
     /* gets previos pointer */
     readonly_list_ptr prev = head->prev;
     /* rewinds head pointer to previous pointer value */
-    MUTATE_LIST_PTR(*current, prev);
+    MUTATE_LIST_PTR(current, prev);
     /* assigns current stack head pointer to temporary */
     readonly_list_ptr ptr = head;
     /* gets temporary pointer value */
