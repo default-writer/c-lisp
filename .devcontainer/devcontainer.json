@@ -25,7 +25,8 @@
         "github.vscode-pull-request-github",
         "huizhou.githd",
         "vadimcn.vscode-lldb",
-        "dseight.disasexpl"
+        "dseight.disasexpl",
+        "maziac.asm-code-lens"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

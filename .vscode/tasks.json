@@ -9,7 +9,7 @@
                 "-save-temps",
                 "*.c",
                 "-o",
-                "${fileDirname}/lisp"
+                "./lisp"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

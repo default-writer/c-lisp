@@ -12,17 +12,6 @@
             "args": []
         },
         {
-            "type": "gdb",
-            "request": "launch",
-            "name": "gdb - Build and debug",
-            "target": "./lisp",
-            "cwd": "${workspaceFolder}",
-            "valuesFormatting": "parseText",
-            "preLaunchTask": "C/C++: gcc build active file",
-            "internalConsoleOptions": "openOnSessionStart",
-            "miDebuggerPath": "/usr/bin/gdb"
-        },
-        {
             "name": "gcc - Build and debug",
             "type": "cppdbg",
             "request": "launch",
