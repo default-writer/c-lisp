@@ -50,7 +50,10 @@ const struct list_vtable list_vt = {
 /* current context pointer set to zero */
 readonly_list_ptr list_init() {
     /* sets current context's head element */
-    return (readonly_list_ptr)calloc(1, sizeof(struct list));
+    /* stores into pre-allocated value newly allocated memory buffer pointer */
+    readonly_list_ptr ptr = (readonly_list_ptr)calloc(1, sizeof(struct list));
+    /* returns current head pointer */
+    return ptr;
 }
 
 /* allocates a memory for provided payload  */

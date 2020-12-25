@@ -16,7 +16,14 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"ms-vscode.cpptools"
+        "ms-vscode.cpptools",
+        "webfreak.debug",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        "letmaik.git-tree-compare",
+        "github.vscode-pull-request-github",
+        "huizhou.githd"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
