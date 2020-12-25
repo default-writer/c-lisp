@@ -7,7 +7,7 @@ void list_alloc(readonly_list_ptr ctx);
 void list_parse(readonly_list_ptr ctx);
 void list_free(readonly_list_ptr ctx);
 
-void list_init(readonly_list_ptr* const current);
+readonly_list_ptr list_init();
 void list_push(readonly_list_ptr* const current, void* payload);
 void* list_pop(readonly_list_ptr* const current);
 void list_destroy(readonly_list_ptr* const current);

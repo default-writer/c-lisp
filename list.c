@@ -40,10 +40,9 @@ const struct list_vtable list_vt = {
 /* initializes the new context's head element */
 /* as a result, new memory block will be allocated */
 /* current context pointer set to zero */
-void list_init(readonly_list_ptr* const current) {
+readonly_list_ptr list_init() {
     /* sets current context's head element */
-    MUTATE_LIST_PTR(*current, calloc(1, sizeof(struct list)));
-    /* sets current context's counter to zero */
+    return (readonly_list_ptr)calloc(1, sizeof(struct list));
 }
 
 /* allocates a memory for provided payload  */

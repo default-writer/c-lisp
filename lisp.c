@@ -30,22 +30,12 @@ int main(int argc, char* argv) {
     return 0;
 }
 
-struct list_context {
-    // head element
-    readonly_list_ptr head;
-};
-
 void list_demo() {
-    // initialize current context (stack)
-    struct list_context* ctx = (struct list_context*)calloc(1, sizeof(struct list_context));
     // create list
     const struct list_vtable* list = &list_vt;
 
-    readonly_list_ptr ptr = ctx->head;
-
     // initialize list
-    list->init(&ptr);
-
+    readonly_list_ptr ptr = list->init();
     readonly_list_ptr* const current = &ptr;
 
     void* payload = (void*)0xdeadbeef;
@@ -96,6 +86,4 @@ void list_demo() {
 
     // destroy list
     list->destroy(&ptr);
-    // free curent context (stack)
-    free(ctx);
 }

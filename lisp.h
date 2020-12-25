@@ -20,7 +20,7 @@ typedef struct list {
 
 struct list_vtable {
     /* initialize context */
-    void (*init)(readonly_list_ptr* const current);
+    readonly_list_ptr (*init)();
     /* push item on current context (stack) */
     void (*push)(readonly_list_ptr* const current, void* item);
     /* pop item on current context (stack) */
