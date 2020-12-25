@@ -42,9 +42,7 @@ const struct list_vtable list_vt = {
     .init = list_init,
     .push = list_push,
     .pop = list_pop,
-    .destroy = list_destroy,
-    .print_head = list_print_head,
-    .print = list_print
+    .destroy = list_destroy
 };
 
 /* initializes the new context's head element */
@@ -134,10 +132,8 @@ void list_destroy(readonly_list_ptr const current) {
 
 // print head on current context (stack)
 void list_print_head(readonly_list_ptr const current) {
-#ifdef DEBUG
     // visualise item
     printf("alloc: 0x%llx 0x%llx\n", (ADDR)current, (ADDR)current->payload);
-#endif
 }
 
 // print all stack trace to output
@@ -181,35 +177,47 @@ void list_demo() {
         return;
     }
     MUTATE_LIST_PTR(head, list->push(head, payload));
-    list->print_head(head);
+#ifdef DEBUG
+    list_print_head(head);
+#endif
     MUTATE_LIST_PTR(head, list->push(head, ++payload));
-    list->print_head(head);
+#ifdef DEBUG
+    list_print_head(head);
+#endif
+#ifdef DEBUG
     MUTATE_LIST_PTR(head, list->push(head, ++payload));
-    list->print_head(head);
+#ifdef DEBUG
+    list_print_head(head);
+#endif
     MUTATE_LIST_PTR(head, list->push(head, ++payload));
-    list->print_head(head);
+#endif
+#ifdef DEBUG
+    list_print_head(head);
+#endif
     MUTATE_LIST_PTR(head, list->push(head, ++payload));
-    list->print_head(head);
+#ifdef DEBUG
+    list_print_head(head);
+#endif
 #ifdef DEBUG
     printf("\n");
 #endif
 #ifdef DEBUG
-    list->print(head);
+    list_print(head);
 #endif
     void* q_pop0 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head)); 
 #ifdef DEBUG
-    list->print(head);
+    list_print(head);
 #endif
     void* q_pop1 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
 #ifdef DEBUG
-    list->print(head);
+    list_print(head);
 #endif
     void* q_pop2 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
 #ifdef DEBUG
-    list->print(head);
+    list_print(head);
 #endif
     void* q_pop3 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
@@ -217,12 +225,12 @@ void list_demo() {
     q_pop3 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
 #ifdef DEBUG
-    list->print(head);
+    list_print(head);
 #endif
     void* q_pop4 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
 #ifdef DEBUG
-    list->print(head);
+    list_print(head);
 #endif
 
     // destroy list
