@@ -9,6 +9,10 @@
 
 typedef long long unsigned int ADDR;
 
+void list_alloc(readonly_list_ptr ctx);
+void list_parse(readonly_list_ptr ctx);
+void list_free(readonly_list_ptr ctx);
+
 void list_alloc(readonly_list_ptr ctx) {
     
 }
@@ -24,7 +28,7 @@ void list_free(readonly_list_ptr ctx) {
 readonly_list_ptr list_init();
 readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
 void* list_pop(readonly_list_ptr* const current);
-void list_destroy(readonly_list_ptr* const current);
+void list_destroy(readonly_list_ptr const current);
 void list_print_head(readonly_list_ptr const current);
 void list_print(readonly_list_ptr const current);
 
@@ -95,10 +99,10 @@ void* list_pop(readonly_list_ptr* const current) {
 /* destroys the memory stack */
 /* frees all memory elements */
 /* as a result, memory will be freed */
-void list_destroy(readonly_list_ptr* const current) {
+void list_destroy(readonly_list_ptr const current) {
     /* get current context's head */
     /* assigns currently selected item pointer to temporary */
-    readonly_list_ptr tmp = *current;
+    readonly_list_ptr tmp = current;
     /* if not already freed */
     if (tmp != 0) {
         /* until we found element with no parent (previous) node */
@@ -118,7 +122,7 @@ void list_destroy(readonly_list_ptr* const current) {
             MUTATE_LIST_PTR(tmp, prev);
         } while (tmp != 0);
         /* all stack items are processed */
-        MUTATE_LIST_PTR(*current, 0);
+        MUTATE_LIST_PTR(current, 0);
     }
 }
 

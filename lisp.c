@@ -86,5 +86,5 @@ void list_demo() {
 #endif
 
     // destroy list
-    list->destroy(&ptr);
+    list->destroy(ptr);
 }
