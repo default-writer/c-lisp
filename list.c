@@ -60,14 +60,14 @@ readonly_list_ptr list_init() {
 /* as a result, items counter will increase */
 readonly_list_ptr list_push(readonly_list_ptr const current, void* payload) {
     /* stores into pre-allocated value newly allocated memory buffer pointer */
-    readonly_list_ptr item = list_init();
+    readonly_list_ptr ptr = list_init();
     /* sets the new data into allocated memory buffer */
-    MUTATE_PTR(item->payload, payload);
+    MUTATE_PTR(ptr->payload, payload);
     /* pushes new item on top of the stack in current context */
     /* assigns item's prev pointer to head pointer */
-    MUTATE_LIST_PTR(item->prev, current);
+    MUTATE_LIST_PTR(ptr->prev, current);
     /* advances position of head pointer to the new head */
-    return item;
+    return ptr;
 }
 
 /* pop existing element at the top of the stack/queue/list */
