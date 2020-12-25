@@ -30,12 +30,12 @@ void list_free(readonly_list_ptr ctx) {
     
 }
 
-readonly_list_ptr list_init();
-readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
-readonly_list_ptr list_pop(readonly_list_ptr const current);
-void list_destroy(readonly_list_ptr const current);
-void list_print_head(readonly_list_ptr const current);
-void list_print(readonly_list_ptr const current);
+static inline readonly_list_ptr list_init();
+static inline readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
+static inline readonly_list_ptr list_pop(readonly_list_ptr const current);
+static inline void list_destroy(readonly_list_ptr const current);
+static inline void list_print_head(readonly_list_ptr const current);
+static inline void list_print(readonly_list_ptr const current);
 
 /* list vtable */
 const struct list_vtable list_vt = {
@@ -165,7 +165,25 @@ void list_print(readonly_list_ptr const current) {
     // stop on root element
 }
 
+void stack_demo() {
+    const struct list_vtable* list = &list_vt;
+    readonly_list_ptr args = list->init();
+    MUTATE_LIST_PTR(args, list->push(args,(void*)1));
+    MUTATE_LIST_PTR(args, list->push(args,(void*)2));
+    MUTATE_LIST_PTR(args, list->push(args,(void*)3));
+    unsigned char v = 'a';
+    v = (__extension__({
+        int __res;
+        __res;
+    }));
+    // destroy list
+    list->destroy(args);
+}
+
 void list_demo() {
+    
+    stack_demo();
+
     // create list
     const struct list_vtable* list = &list_vt;
 
@@ -233,7 +251,6 @@ void list_demo() {
 #ifdef DEBUG
     list_print(head);
 #endif
-
     // destroy list
     list->destroy(head);
 }

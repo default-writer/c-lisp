@@ -9,7 +9,8 @@
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/lisp",
-            "args": []
+            "args": [],
+            "preLaunchTask": "C/C++: gcc build active file",
         },
         {
             "name": "gcc - Build and debug",
