@@ -24,7 +24,8 @@
         "letmaik.git-tree-compare",
         "github.vscode-pull-request-github",
         "huizhou.githd",
-        "vadimcn.vscode-lldb"
+        "vadimcn.vscode-lldb",
+        "dseight.disasexpl"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
