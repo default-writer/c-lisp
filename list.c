@@ -50,7 +50,7 @@ readonly_list_ptr list_init() {
 /* as a result, items counter will increase */
 void list_push(readonly_list_ptr* const current, void* payload) {
     /* stores into pre-allocated value newly allocated memory buffer pointer */
-    readonly_list_ptr item = (readonly_list_ptr)calloc(1, sizeof(struct list));
+    readonly_list_ptr item = list_init();
     /* sets the new data into allocated memory buffer */
     MUTATE_PTR(item->payload, payload);
     /* pushes new item on top of the stack in current context */
