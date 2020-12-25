@@ -4,8 +4,9 @@
             "type": "cppbuild",
             "label": "C/C++: gcc build active file",
             "command": "/usr/bin/gcc",
-            "args": [
+            "args": [ 
                 "-g",
+                "-save-temps",
                 "*.c",
                 "-o",
                 "${fileDirname}/lisp"
