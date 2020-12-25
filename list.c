@@ -169,8 +169,6 @@ void list_demo() {
     // initialize list
     readonly_list_ptr head = list->init();
 
-    readonly_list_ptr const root = head;
-
     void* payload = (void*)0xdeadbeef;
     void* null = list->pop(head);
     if (0 != null) {
