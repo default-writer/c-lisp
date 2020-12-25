@@ -12,7 +12,8 @@
             "cwd": "${workspaceFolder}",
             "valuesFormatting": "parseText",
             "preLaunchTask": "C/C++: gcc build active file",
-            "internalConsoleOptions": "openOnSessionStart"
+            "internalConsoleOptions": "openOnSessionStart",
+            "miDebuggerPath": "/usr/bin/gdb"            
         },
         {
             "name": "gcc - Build and debug",
