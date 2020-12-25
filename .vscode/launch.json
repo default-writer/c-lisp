@@ -5,9 +5,9 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "gdb - Build and debug",
+            "type": "gdb",
             "request": "launch",
-            "name": "gdb - Launch Program",
+            "name": "gdb - Build and debug",
             "target": "./lisp",
             "cwd": "${workspaceFolder}",
             "valuesFormatting": "parseText",
