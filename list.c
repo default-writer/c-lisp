@@ -32,7 +32,7 @@ void list_free(readonly_list_ptr ctx) {
 
 readonly_list_ptr list_init();
 readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
-void* list_pop(readonly_list_ptr const current);
+readonly_list_ptr list_pop(readonly_list_ptr const current);
 void list_destroy(readonly_list_ptr const current);
 void list_print_head(readonly_list_ptr const current);
 void list_print(readonly_list_ptr const current);
@@ -74,7 +74,7 @@ readonly_list_ptr list_push(readonly_list_ptr const current, void* payload) {
 /* at current context, existing head will be removed out of stack */
 /* for the new stack header, correcponding values will be fixed */
 /* as a result, header will be set to previous position, represented as head's reference to previos head */
-void* list_pop(readonly_list_ptr const current) {
+readonly_list_ptr list_pop(readonly_list_ptr const current) {
     /* get current context's head */
     readonly_list_ptr head = current;
     /* if we call method on empty stack, do not return head element, return null element by convention */
@@ -93,12 +93,12 @@ void* list_pop(readonly_list_ptr const current) {
     /* detouches the pointer from the list */
 #ifndef DIRTY
     MUTATE_LIST_PTR(ptr->prev, 0);
-    MUTATE_LIST_PTR(ptr->payload, 0);
+    MUTATE_PTR(ptr->payload, 0);
 #endif
     /* free temporary pointer value */
     free(ptr);
     /* returns removed element */
-    return payload;
+    return prev;
 }
 
 /* destroys the memory stack */
@@ -171,56 +171,60 @@ void list_demo() {
     const struct list_vtable* list = &list_vt;
 
     // initialize list
-    readonly_list_ptr ptr = list->init();
+    readonly_list_ptr head = list->init();
 
-    readonly_list_ptr const current = ptr;
+    readonly_list_ptr const root = head;
 
     void* payload = (void*)0xdeadbeef;
-    void* is_null[] = {
-        list->pop(current)
-    };
-    if (0 != is_null[0]) {
+    void* null = list->pop(head);
+    if (0 != null) {
         return;
     }
-    MUTATE_LIST_PTR(ptr, list->push(ptr, payload));
-    list->print_head(ptr);
-    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
-    list->print_head(ptr);
-    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
-    list->print_head(ptr);
-    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
-    list->print_head(ptr);
-    MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
-    list->print_head(ptr);
+    MUTATE_LIST_PTR(head, list->push(head, payload));
+    list->print_head(head);
+    MUTATE_LIST_PTR(head, list->push(head, ++payload));
+    list->print_head(head);
+    MUTATE_LIST_PTR(head, list->push(head, ++payload));
+    list->print_head(head);
+    MUTATE_LIST_PTR(head, list->push(head, ++payload));
+    list->print_head(head);
+    MUTATE_LIST_PTR(head, list->push(head, ++payload));
+    list->print_head(head);
 #ifdef DEBUG
     printf("\n");
 #endif
 #ifdef DEBUG
-    list->print(ptr);
+    list->print(head);
 #endif
-    void* q_pop0 = list->pop(current); 
+    void* q_pop0 = head->payload;
+    MUTATE_LIST_PTR(head, list->pop(head)); 
 #ifdef DEBUG
-    list->print(ptr);
+    list->print(head);
 #endif
-    void* q_pop1 = list->pop(current); 
+    void* q_pop1 = head->payload;
+    MUTATE_LIST_PTR(head, list->pop(head));
 #ifdef DEBUG
-    list->print(ptr);
+    list->print(head);
 #endif
-    void* q_pop2 = list->pop(current); 
+    void* q_pop2 = head->payload;
+    MUTATE_LIST_PTR(head, list->pop(head));
 #ifdef DEBUG
-    list->print(ptr);
+    list->print(head);
 #endif
-    void* q_pop3 = list->pop(current); 
-    MUTATE_LIST_PTR(ptr, list->push(ptr, q_pop3));
-    q_pop3 = list->pop(current); 
+    void* q_pop3 = head->payload;
+    MUTATE_LIST_PTR(head, list->pop(head));
+    MUTATE_LIST_PTR(head, list->push(head, q_pop3));
+    q_pop3 = head->payload;
+    MUTATE_LIST_PTR(head, list->pop(head));
 #ifdef DEBUG
-    list->print(ptr);
+    list->print(head);
 #endif
-    void* q_pop4 = list->pop(current); 
+    void* q_pop4 = head->payload;
+    MUTATE_LIST_PTR(head, list->pop(head));
 #ifdef DEBUG
-    list->print(ptr);
+    list->print(head);
 #endif
 
     // destroy list
-    list->destroy(ptr);
+    list->destroy(head);
 }
