@@ -47,15 +47,15 @@ void list_demo() {
         return;
     }
     MUTATE_LIST_PTR(ptr, list->push(ptr, payload));
-    list->print_head(current);
+    list->print_head(ptr);
     MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
-    list->print_head(current);
+    list->print_head(ptr);
     MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
-    list->print_head(current);
+    list->print_head(ptr);
     MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
-    list->print_head(current);
+    list->print_head(ptr);
     MUTATE_LIST_PTR(ptr, list->push(ptr, ++payload));
-    list->print_head(current);
+    list->print_head(ptr);
 #ifdef DEBUG
     printf("\n");
 #endif

@@ -25,7 +25,7 @@ readonly_list_ptr list_init();
 readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
 void* list_pop(readonly_list_ptr* const current);
 void list_destroy(readonly_list_ptr* const current);
-void list_print_head(readonly_list_ptr* const current);
+void list_print_head(readonly_list_ptr const current);
 void list_print(readonly_list_ptr* const current);
 
 /* list vtable */
@@ -124,12 +124,10 @@ void list_destroy(readonly_list_ptr* const current) {
 
 
 // print head on current context (stack)
-void list_print_head(readonly_list_ptr* const current) {
-    // get current context's head
-    readonly_list_ptr tmp = *current;
+void list_print_head(readonly_list_ptr const current) {
 #ifdef DEBUG
     // visualise item
-    printf("alloc: 0x%llx 0x%llx\n", (ADDR)tmp, (ADDR)tmp->payload);
+    printf("alloc: 0x%llx 0x%llx\n", (ADDR)current, (ADDR)current->payload);
 #endif
 }
 
