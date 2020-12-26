@@ -14,28 +14,12 @@ typedef struct list * assignable_list_ptr;
 #define MUTATE_PTR(a, b) *((assignable_ptr*)&a) = b
 #define MUTATE_LIST_PTR(a, b) *((assignable_list_ptr*)&a) = b
 
-void list_alloc(readonly_list_ptr ctx);
-void list_parse(readonly_list_ptr ctx);
-void list_free(readonly_list_ptr ctx);
-
-void list_alloc(readonly_list_ptr ctx) {
-    
-}
-
-void list_parse(readonly_list_ptr ctx) {
-    
-}
-
-void list_free(readonly_list_ptr ctx) {
-    
-}
-
-static inline readonly_list_ptr list_init();
-static inline readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
-static inline readonly_list_ptr list_pop(readonly_list_ptr const current);
-static inline void list_destroy(readonly_list_ptr const current);
-static inline void list_print_head(readonly_list_ptr const current);
-static inline void list_print(readonly_list_ptr const current);
+readonly_list_ptr list_init();
+readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
+readonly_list_ptr list_pop(readonly_list_ptr const current);
+void list_destroy(readonly_list_ptr const current);
+void list_print_head(readonly_list_ptr const current);
+void list_print(readonly_list_ptr const current);
 
 /* list vtable */
 const struct list_vtable list_vt = {
@@ -52,6 +36,9 @@ readonly_list_ptr list_init() {
     /* sets current context's head element */
     /* stores into pre-allocated value newly allocated memory buffer pointer */
     readonly_list_ptr ptr = (readonly_list_ptr)calloc(1, sizeof(struct list));
+#ifdef DEBUG
+    printf("alloc: 0x%llx\n", (ADDR)ptr);
+#endif
     /* returns current head pointer */
     return ptr;
 }
@@ -68,6 +55,9 @@ readonly_list_ptr list_push(readonly_list_ptr const current, void* payload) {
     /* assigns item's prev pointer to head pointer */
     MUTATE_LIST_PTR(ptr->prev, current);
     /* advances position of head pointer to the new head */
+#ifdef DEBUG
+    list_print(ptr);
+#endif
     return ptr;
 }
 
@@ -92,6 +82,9 @@ readonly_list_ptr list_pop(readonly_list_ptr const current) {
     /* gets temporary pointer value */
     void* payload = ptr->payload;
     /* detouches the pointer from the list */
+#ifdef DEBUG
+    printf("free: 0x%llx\n", (ADDR)ptr);
+#endif
 #ifndef DIRTY
     MUTATE_LIST_PTR(ptr->prev, 0);
     MUTATE_PTR(ptr->payload, 0);
@@ -117,6 +110,9 @@ void list_destroy(readonly_list_ptr const current) {
             readonly_list_ptr ptr = tmp;
             /* gets prev pointer value */
             readonly_list_ptr prev = tmp->prev;
+#ifdef DEBUG
+            printf("free: 0x%llx\n", (ADDR)ptr);
+#endif
 #ifndef DIRTY
             /* zero all pointers */
             MUTATE_LIST_PTR(ptr->prev, 0);
@@ -136,7 +132,7 @@ void list_destroy(readonly_list_ptr const current) {
 // print head on current context (stack)
 void list_print_head(readonly_list_ptr const current) {
     // visualise item
-    printf("alloc: 0x%llx 0x%llx\n", (ADDR)current, (ADDR)current->payload);
+    printf("[0x%llx]: 0x%llx\n", (ADDR)current, (ADDR)current->payload);
 }
 
 // print all stack trace to output
@@ -165,30 +161,31 @@ void list_print(readonly_list_ptr const current) {
     // stop on root element
 }
 
-void stack_demo() {
+readonly_list_ptr stack_demo(readonly_list_ptr args) {
     const struct list_vtable* list = &list_vt;
-    readonly_list_ptr args = list->init();
-    MUTATE_LIST_PTR(args, list->push(args,(void*)1));
-    MUTATE_LIST_PTR(args, list->push(args,(void*)2));
-    MUTATE_LIST_PTR(args, list->push(args,(void*)3));
-    unsigned char v = 'a';
-    v = (__extension__({
-        int __res;
-        __res;
-    }));
-    // destroy list
-    list->destroy(args);
+    char *str = args->payload;
+    MUTATE_LIST_PTR(args, list->pop(args));
+    char *format = args->payload;
+    MUTATE_LIST_PTR(args, list->pop(args));
+    printf(format, str);
+    return args;
 }
 
 void list_demo() {
-    
-    stack_demo();
-
     // create list
     const struct list_vtable* list = &list_vt;
 
     // initialize list
     readonly_list_ptr head = list->init();
+
+    char *str = "Hello, World!\n";
+    char *format = "%s";
+
+    readonly_list_ptr args = list->init();
+    MUTATE_LIST_PTR(args, list->push(args, format));
+    MUTATE_LIST_PTR(args, list->push(args, str));
+    MUTATE_LIST_PTR(args, stack_demo(args));
+    list->destroy(args);
 
     void* payload = (void*)0xdeadbeef;
     void* null = list->pop(head);
@@ -196,61 +193,23 @@ void list_demo() {
         return;
     }
     MUTATE_LIST_PTR(head, list->push(head, payload));
-#ifdef DEBUG
-    list_print_head(head);
-#endif
     MUTATE_LIST_PTR(head, list->push(head, ++payload));
-#ifdef DEBUG
-    list_print_head(head);
-#endif
-#ifdef DEBUG
     MUTATE_LIST_PTR(head, list->push(head, ++payload));
-#ifdef DEBUG
-    list_print_head(head);
-#endif
     MUTATE_LIST_PTR(head, list->push(head, ++payload));
-#endif
-#ifdef DEBUG
-    list_print_head(head);
-#endif
     MUTATE_LIST_PTR(head, list->push(head, ++payload));
-#ifdef DEBUG
-    list_print_head(head);
-#endif
-#ifdef DEBUG
-    printf("\n");
-#endif
-#ifdef DEBUG
-    list_print(head);
-#endif
+
     void* q_pop0 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head)); 
-#ifdef DEBUG
-    list_print(head);
-#endif
     void* q_pop1 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
-#ifdef DEBUG
-    list_print(head);
-#endif
     void* q_pop2 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
-#ifdef DEBUG
-    list_print(head);
-#endif
     void* q_pop3 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
     MUTATE_LIST_PTR(head, list->push(head, q_pop3));
     q_pop3 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
-#ifdef DEBUG
-    list_print(head);
-#endif
     void* q_pop4 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
-#ifdef DEBUG
-    list_print(head);
-#endif
-    // destroy list
     list->destroy(head);
 }
