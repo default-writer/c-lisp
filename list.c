@@ -15,7 +15,7 @@ typedef struct list * assignable_list_ptr;
 #define MUTATE_LIST_PTR(a, b) *((assignable_list_ptr*)&a) = b
 
 readonly_list_ptr list_init();
-readonly_list_ptr list_push(readonly_list_ptr const current, void* payload);
+void list_push(readonly_list_ptr* const current, void* payload);
 readonly_list_ptr list_pop(readonly_list_ptr const current);
 void list_destroy(readonly_list_ptr const current);
 void list_print_head(readonly_list_ptr const current);
@@ -46,19 +46,19 @@ readonly_list_ptr list_init() {
 /* allocates a memory for provided payload  */
 /* at current context, data payload stored at allocated memory buffer */
 /* as a result, items counter will increase */
-readonly_list_ptr list_push(readonly_list_ptr const current, void* payload) {
+void list_push(readonly_list_ptr* const current, void* payload) {
     /* stores into pre-allocated value newly allocated memory buffer pointer */
     readonly_list_ptr ptr = list_init();
     /* sets the new data into allocated memory buffer */
     MUTATE_PTR(ptr->payload, payload);
     /* pushes new item on top of the stack in current context */
     /* assigns item's prev pointer to head pointer */
-    MUTATE_LIST_PTR(ptr->prev, current);
+    MUTATE_LIST_PTR(ptr->prev, *current);
     /* advances position of head pointer to the new head */
+    MUTATE_LIST_PTR(*current, ptr);
 #ifdef DEBUG
     list_print(ptr);
 #endif
-    return ptr;
 }
 
 /* pop existing element at the top of the stack/queue/list */
@@ -182,8 +182,8 @@ void list_demo() {
     char *format = "%s";
 
     readonly_list_ptr args = list->init();
-    MUTATE_LIST_PTR(args, list->push(args, format));
-    MUTATE_LIST_PTR(args, list->push(args, str));
+    list->push(&args, format);
+    list->push(&args, str);
     MUTATE_LIST_PTR(args, stack_demo(args));
     list->destroy(args);
 
@@ -192,11 +192,11 @@ void list_demo() {
     if (0 != null) {
         return;
     }
-    MUTATE_LIST_PTR(head, list->push(head, payload));
-    MUTATE_LIST_PTR(head, list->push(head, ++payload));
-    MUTATE_LIST_PTR(head, list->push(head, ++payload));
-    MUTATE_LIST_PTR(head, list->push(head, ++payload));
-    MUTATE_LIST_PTR(head, list->push(head, ++payload));
+    list->push(&head, payload);
+    list->push(&head, ++payload);
+    list->push(&head, ++payload);
+    list->push(&head, ++payload);
+    list->push(&head, ++payload);
 
     void* q_pop0 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head)); 
@@ -206,7 +206,7 @@ void list_demo() {
     MUTATE_LIST_PTR(head, list->pop(head));
     void* q_pop3 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
-    MUTATE_LIST_PTR(head, list->push(head, q_pop3));
+    list->push(&head, q_pop3);
     q_pop3 = head->payload;
     MUTATE_LIST_PTR(head, list->pop(head));
     void* q_pop4 = head->payload;
