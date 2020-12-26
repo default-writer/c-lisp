@@ -146,7 +146,7 @@ void list_print(readonly_list_ptr const current) {
 #endif
             // remember temprary's prior pointer value to temporary
             MUTATE_LIST_PTR(tmp, tmp->prev);
-        } while (tmp != 0/*root*/);
+        } while (tmp != 0);
     }
     // stop on root element
 }
