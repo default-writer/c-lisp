@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
-#include "lisp.h"
+
 #include "list.h"
 
 typedef long long unsigned int ADDR;
@@ -151,7 +151,7 @@ void list_print(readonly_list_ptr const current) {
     // stop on root element
 }
 
-void stack_demo(readonly_list_ptr* args) {
+void print_list_node(readonly_list_ptr* args) {
     const struct list_vtable* list = &list_vt;
     /* get current context's head */
     char *str = (*args)->payload;
@@ -175,13 +175,13 @@ void list_demo() {
     readonly_list_ptr args = list->init();
     list->push(&args, format);
     list->push(&args, str);
-    stack_demo(&args);
+    print_list_node(&args);
     list->destroy(&args);
 
     // no isolation
     list->push(&head, format);
     list->push(&head, str);
-    stack_demo(&head);
+    print_list_node(&head);
 
     void* payload = (void*)0xdeadbeef;
     list->push(&head, payload);

@@ -4,9 +4,14 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "lisp.h"
+
 #include "list.h"
+#include "graph.h"
 
 #include "str.h"
+
+extern void list_demo();
+extern void graph_demo();
 
 int main(int argc, char* argv) {
 
@@ -24,6 +29,7 @@ int main(int argc, char* argv) {
     free(ctx);
 
     list_demo();
+    graph_demo();
 
     return 0;
 }

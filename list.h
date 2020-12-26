@@ -1,10 +1,6 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-#include "lisp.h"
-
-void list_demo();
-
 typedef void * const readonly_ptr;
 typedef struct list * const readonly_list_ptr;
 typedef struct list {

@@ -26,7 +26,8 @@
         "huizhou.githd",
         "vadimcn.vscode-lldb",
         "dseight.disasexpl",
-        "maziac.asm-code-lens"
+        "maziac.asm-code-lens",
+        "visualstudioexptteam.vscodeintellicode"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
