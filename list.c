@@ -171,11 +171,17 @@ void list_demo() {
     char *str = "Hello, World!\n";
     char *format = "%s";
 
+    // isolation mode
     readonly_list_ptr args = list->init();
     list->push(&args, format);
     list->push(&args, str);
     stack_demo(&args);
     list->destroy(&args);
+
+    // no isolation
+    list->push(&head, format);
+    list->push(&head, str);
+    stack_demo(&head);
 
     void* payload = (void*)0xdeadbeef;
     list->push(&head, payload);
