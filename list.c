@@ -85,20 +85,14 @@ void list_pop(readonly_list_ptr* const current) {
     /* get current context's head */
     readonly_list_ptr head = *current;
     /* if we call method on empty stack, do not return head element, return null element by convention */
-    if (head == 0 || head->prev == 0) {
-        /* returns default element as null element */
-        return;
+    if (head != 0) {
+        /* gets previos pointer */
+        readonly_list_ptr prev = head->prev;
+        /* free current pointer */
+        list_free(head);    
+        /* rewinds head pointer to previous pointer value */
+        MUTATE_LIST_PTR(*current, prev);
     }
-    /* gets previos pointer */
-    readonly_list_ptr prev = head->prev;
-    /* rewinds head pointer to previous pointer value */
-    MUTATE_LIST_PTR(*current, prev);
-    /* assigns current stack head pointer to temporary */
-    readonly_list_ptr ptr = head;
-    /* gets temporary pointer value */
-    // void* payload = ptr->payload;
-    /* detouches the pointer from the list */
-    list_free(ptr);
 }
 
 /* destroys the memory stack */
@@ -107,20 +101,18 @@ void list_pop(readonly_list_ptr* const current) {
 void list_destroy(readonly_list_ptr* const current) {
     /* get current context's head */
     /* assigns currently selected item pointer to temporary */
-    readonly_list_ptr tmp = *current;
+    readonly_list_ptr head = *current;
     /* if not already freed */
-    if (tmp != 0) {
+    if (head != 0) {
         /* until we found element with no parent (previous) node */
         do {
-            /* gets temporary pointer value */
-            readonly_list_ptr ptr = tmp;
-            /* gets prev pointer value */            
-            readonly_list_ptr prev = tmp->prev;
+            /* gets previos pointer */           
+            readonly_list_ptr prev = head->prev;
             /* free current pointer */
-            list_free(ptr);
-            /* advances temporary pointer value to the next item */
-            MUTATE_LIST_PTR(tmp, prev);
-        } while (tmp != 0);
+            list_free(head);
+            /* rewinds head pointer to previous pointer value */
+            MUTATE_LIST_PTR(head, prev);
+        } while (head != 0);
         /* all stack items are processed */
         MUTATE_LIST_PTR(*current, 0);
     }
