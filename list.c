@@ -16,8 +16,9 @@ typedef struct list * assignable_list_ptr;
 
 readonly_list_ptr list_init();
 void list_push(readonly_list_ptr* const current, void* payload);
-readonly_list_ptr list_pop(readonly_list_ptr const current);
-void list_destroy(readonly_list_ptr const current);
+void list_pop(readonly_list_ptr* const current);
+void list_destroy(readonly_list_ptr* const current);
+
 void list_print_head(readonly_list_ptr const current);
 void list_print(readonly_list_ptr const current);
 
@@ -61,70 +62,67 @@ void list_push(readonly_list_ptr* const current, void* payload) {
 #endif
 }
 
-/* pop existing element at the top of the stack/queue/list */
-/* at current context, existing head will be removed out of stack */
-/* for the new stack header, correcponding values will be fixed */
-/* as a result, header will be set to previous position, represented as head's reference to previos head */
-readonly_list_ptr list_pop(readonly_list_ptr const current) {
-    /* get current context's head */
-    readonly_list_ptr head = current;
-    /* if we call method on empty stack, do not return head element, return null element by convention */
-    if (head == 0 || head->prev == 0) {
-        /* returns default element as null element */
-        return 0;
-    }
-    /* gets previos pointer */
-    readonly_list_ptr prev = head->prev;
-    /* rewinds head pointer to previous pointer value */
-    MUTATE_LIST_PTR(current, prev);
-    /* assigns current stack head pointer to temporary */
-    readonly_list_ptr ptr = head;
-    /* gets temporary pointer value */
-    void* payload = ptr->payload;
-    /* detouches the pointer from the list */
+
+/* free memory block */
+void list_free(readonly_list_ptr ptr) {
 #ifdef DEBUG
     printf("free: 0x%llx\n", (ADDR)ptr);
 #endif
 #ifndef DIRTY
+    /* zero all pointers */
     MUTATE_LIST_PTR(ptr->prev, 0);
     MUTATE_PTR(ptr->payload, 0);
 #endif
-    /* free temporary pointer value */
+    /* free pointer */
     free(ptr);
-    /* returns removed element */
-    return prev;
+}
+
+/* pop existing element at the top of the stack/queue/list */
+/* at current context, existing head will be removed out of stack */
+/* for the new stack header, correcponding values will be fixed */
+/* as a result, header will be set to previous position, represented as head's reference to previos head */
+void list_pop(readonly_list_ptr* const current) {
+    /* get current context's head */
+    readonly_list_ptr head = *current;
+    /* if we call method on empty stack, do not return head element, return null element by convention */
+    if (head == 0 || head->prev == 0) {
+        /* returns default element as null element */
+        return;
+    }
+    /* gets previos pointer */
+    readonly_list_ptr prev = head->prev;
+    /* rewinds head pointer to previous pointer value */
+    MUTATE_LIST_PTR(*current, prev);
+    /* assigns current stack head pointer to temporary */
+    readonly_list_ptr ptr = head;
+    /* gets temporary pointer value */
+    // void* payload = ptr->payload;
+    /* detouches the pointer from the list */
+    list_free(ptr);
 }
 
 /* destroys the memory stack */
 /* frees all memory elements */
 /* as a result, memory will be freed */
-void list_destroy(readonly_list_ptr const current) {
+void list_destroy(readonly_list_ptr* const current) {
     /* get current context's head */
     /* assigns currently selected item pointer to temporary */
-    readonly_list_ptr tmp = current;
+    readonly_list_ptr tmp = *current;
     /* if not already freed */
     if (tmp != 0) {
         /* until we found element with no parent (previous) node */
         do {
             /* gets temporary pointer value */
             readonly_list_ptr ptr = tmp;
-            /* gets prev pointer value */
+            /* gets prev pointer value */            
             readonly_list_ptr prev = tmp->prev;
-#ifdef DEBUG
-            printf("free: 0x%llx\n", (ADDR)ptr);
-#endif
-#ifndef DIRTY
-            /* zero all pointers */
-            MUTATE_LIST_PTR(ptr->prev, 0);
-            MUTATE_PTR(ptr->payload, 0);
-#endif
-            /* free temporary pointer value */
-            free(ptr);
+            /* free current pointer */
+            list_free(ptr);
             /* advances temporary pointer value to the next item */
             MUTATE_LIST_PTR(tmp, prev);
         } while (tmp != 0);
         /* all stack items are processed */
-        MUTATE_LIST_PTR(current, 0);
+        MUTATE_LIST_PTR(*current, 0);
     }
 }
 
@@ -161,14 +159,14 @@ void list_print(readonly_list_ptr const current) {
     // stop on root element
 }
 
-readonly_list_ptr stack_demo(readonly_list_ptr args) {
+void stack_demo(readonly_list_ptr* args) {
     const struct list_vtable* list = &list_vt;
-    char *str = args->payload;
-    MUTATE_LIST_PTR(args, list->pop(args));
-    char *format = args->payload;
-    MUTATE_LIST_PTR(args, list->pop(args));
+    /* get current context's head */
+    char *str = (*args)->payload;
+    list->pop(args);
+    char *format = (*args)->payload;
+    list->pop(args);
     printf(format, str);
-    return args;
 }
 
 void list_demo() {
@@ -184,14 +182,10 @@ void list_demo() {
     readonly_list_ptr args = list->init();
     list->push(&args, format);
     list->push(&args, str);
-    MUTATE_LIST_PTR(args, stack_demo(args));
-    list->destroy(args);
+    stack_demo(&args);
+    list->destroy(&args);
 
     void* payload = (void*)0xdeadbeef;
-    void* null = list->pop(head);
-    if (0 != null) {
-        return;
-    }
     list->push(&head, payload);
     list->push(&head, ++payload);
     list->push(&head, ++payload);
@@ -199,17 +193,17 @@ void list_demo() {
     list->push(&head, ++payload);
 
     void* q_pop0 = head->payload;
-    MUTATE_LIST_PTR(head, list->pop(head)); 
+    list->pop(&head);
     void* q_pop1 = head->payload;
-    MUTATE_LIST_PTR(head, list->pop(head));
+    list->pop(&head);
     void* q_pop2 = head->payload;
-    MUTATE_LIST_PTR(head, list->pop(head));
+    list->pop(&head);
     void* q_pop3 = head->payload;
-    MUTATE_LIST_PTR(head, list->pop(head));
+    list->pop(&head);
     list->push(&head, q_pop3);
     q_pop3 = head->payload;
-    MUTATE_LIST_PTR(head, list->pop(head));
+    list->pop(&head);
     void* q_pop4 = head->payload;
-    MUTATE_LIST_PTR(head, list->pop(head));
-    list->destroy(head);
+    list->pop(&head);
+    list->destroy(&head);
 }

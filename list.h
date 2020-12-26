@@ -20,9 +20,9 @@ struct list_vtable {
     /* push item on current context (stack) */
     void (*push)(readonly_list_ptr* const current, void* item);
     /* pop item on current context (stack) */
-    readonly_list_ptr (*pop)(readonly_list_ptr const current);
+    void (*pop)(readonly_list_ptr* const current);
     /* destroy context */
-    void (*destroy)(readonly_list_ptr const current);
+    void (*destroy)(readonly_list_ptr* const current);
 };
 
 const struct list_vtable list_vt;
