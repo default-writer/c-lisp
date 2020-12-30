@@ -131,17 +131,19 @@ void new_list_item_pop(readonly_list_ptr* const current) {
 /* as a result, memory will be freed */
 void new_list_destroy(readonly_list_ptr* const current) {
     /* get current context's head */
-    /* assigns currently selected item pointer to temporary */
-    readonly_list_item_ptr tail = (*current)->tail;
-    /* if not already freed */
-    if (tail != 0) {
-        /* until we found element with no parent (previous) node */
-        do {
-            readonly_list_item_ptr prev = tail->prev;
-            new_list_item_free(tail);
-            /* rewinds head pointer to previous pointer value */
-            MUTATE_LIST_ITEM_PTR(tail, prev);
-        } while (tail != 0);
+    if (*current != 0) {
+        /* assigns currently selected item pointer to temporary */
+        readonly_list_item_ptr tail = (*current)->tail;
+        /* if not already freed */
+        if (tail != 0) {
+            /* until we found element with no parent (previous) node */
+            do {
+                readonly_list_item_ptr prev = tail->prev;
+                new_list_item_free(tail);
+                /* rewinds head pointer to previous pointer value */
+                MUTATE_LIST_ITEM_PTR(tail, prev);
+            } while (tail != 0);
+        }
         /* remove list struct */
         new_list_free(*current);
         /* all stack items are processed */
@@ -205,40 +207,40 @@ void new_list_demo() {
     // initialize list
     readonly_list_ptr new_list = list->init();
 
-    // char *str = "Hello, World!\n";
-    // char *format = "%s";
+    char *str = "Hello, World!\n";
+    char *format = "%s";
 
     // isolation mode
-    // readonly_list_ptr args = list->init();
-    // list->push(&args, format);
-    // list->push(&args, str);
-    // new_print_list_node(&args);
-    // list->destroy(&args);
+    readonly_list_ptr args = list->init();
+    list->push(&args, format);
+    list->push(&args, str);
+    new_print_list_node(&args);
+    list->destroy(&args);
 
-    // no isolation
-    //list->push(&new_list, format);
-    //list->push(&new_list, str);
-    //new_print_list_node(&new_list);
+    //no isolation
+    list->push(&new_list, format);
+    list->push(&new_list, str);
+    new_print_list_node(&new_list);
 
     void* payload = (void*)0xdeadbeef;
     list->push(&new_list, payload);
-    // list->push(&new_list, ++payload);
-    // list->push(&new_list, ++payload);
-    // list->push(&new_list, ++payload);
-    // list->push(&new_list, ++payload);
+    list->push(&new_list, ++payload);
+    list->push(&new_list, ++payload);
+    list->push(&new_list, ++payload);
+    list->push(&new_list, ++payload);
 
-    // void* q_pop0 = new_list->tail->payload;
-    // list->pop(&new_list);
-    // void* q_pop1 = new_list->tail->payload;
-    // list->pop(&new_list);
-    // void* q_pop2 = new_list->tail->payload;
-    // list->pop(&new_list);
-    // void* q_pop3 = new_list->tail->payload;
-    // list->pop(&new_list);
-    // list->push(&new_list, q_pop3);
-    // q_pop3 = new_list->tail->payload;
-    // list->pop(&new_list);
-    // void* q_pop4 = new_list->tail->payload;
-    // list->pop(&new_list);
+    void* q_pop0 = new_list->tail->payload;
+    list->pop(&new_list);
+    void* q_pop1 = new_list->tail->payload;
+    list->pop(&new_list);
+    void* q_pop2 = new_list->tail->payload;
+    list->pop(&new_list);
+    void* q_pop3 = new_list->tail->payload;
+    list->pop(&new_list);
+    list->push(&new_list, q_pop3);
+    q_pop3 = new_list->tail->payload;
+    list->pop(&new_list);
+    void* q_pop4 = new_list->tail->payload;
+    list->pop(&new_list);
     list->destroy(&new_list);
 }
