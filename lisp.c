@@ -5,14 +5,15 @@
 #include <stdio.h>
 #include "lisp.h"
 
-#include "list.h"
-#include "graph.h"
+//#include "list.h"
+//#include "graph.h"
+//#include "str.h"
 
-#include "str.h"
+//extern void list_demo();
+//extern void graph_demo();
+//extern void graph_child_demo();
 
-extern void list_demo();
-extern void graph_demo();
-extern void graph_child_demo();
+extern void new_list_demo();
 
 int main(int argc, char* argv) {
 
@@ -31,7 +32,8 @@ int main(int argc, char* argv) {
 
     // list_demo();
     // graph_demo();
-    graph_child_demo();
+    // graph_child_demo();
+    new_list_demo();
 
     return 0;
 }
