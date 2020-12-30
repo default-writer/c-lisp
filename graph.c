@@ -68,16 +68,16 @@ readonly_graph_ptr graph_init() {
 /* as a result, items counter will increase */
 void graph_push(readonly_graph_ptr* const current, void* payload) {
     /* stores into pre-allocated value newly allocated memory buffer pointer */
-    readonly_graph_ptr ptr = graph_init();
+    readonly_graph_ptr head = graph_init();
     /* sets the new data into allocated memory buffer */
-    MUTATE_PTR(ptr->payload, payload);
+    MUTATE_PTR(head->payload, payload);
     /* pushes new item on top of the stack in current context */
     /* assigns item's prev pointer to head pointer */
-    MUTATE_GRAPH_PTR(ptr->prev, *current);
+    MUTATE_GRAPH_PTR(head->prev, *current);
     /* advances position of head pointer to the new head */
-    MUTATE_GRAPH_PTR(*current, ptr);
+    MUTATE_GRAPH_PTR(*current, head);
 #ifdef DEBUG
-    graph_print(ptr);
+    graph_print(head);
 #endif
 }
 
@@ -242,16 +242,21 @@ void graph_child_demo() {
 
     // initialize graph
     readonly_graph_ptr gr = graph->init();
-
+    readonly_graph_ptr root = gr;
     char *str = "Hello, World!\n";
     char *format = "%s";
 
     // isolation mode
-    //readonly_graph_ptr args = graph->init();
-    graph->push_child(&gr, format);
-    graph_print(gr);
-    graph->push_child(&gr, str);
-    graph_print(gr);
+    graph->push_child(&gr, (void*)1);
+    // MUTATE_GRAPH_PTR(gr, root);
+    graph->push(&gr, (void*)2);
+    graph->push_child(&gr, (void*)3);
+    graph->push_child(&gr, (void*)4);
+    graph->push(&gr, (void*)5);
+    graph->push_child(&gr, (void*)6);
+    graph->push(&gr, (void*)7);
+    graph->push(&gr, (void*)8);
+    graph->push_child(&gr, (void*)9);
     
     
     // graph->push(&args, str);
