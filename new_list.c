@@ -28,9 +28,13 @@ void new_list_print(readonly_list_ptr* const current);
 /* list vtable */
 const struct new_list_vtable new_list_vt = {
     .init = new_list_init,
-    .push = new_list_item_push,
-    .pop = new_list_item_pop,
     .destroy = new_list_destroy
+};
+
+/* list item vtable */
+const struct new_list_item_vtable new_list_item_vt = {
+    .push = new_list_item_push,
+    .pop = new_list_item_pop
 };
 
 
@@ -191,7 +195,7 @@ void new_list_print(readonly_list_ptr* const current) {
 }
 
 void new_print_list_node(readonly_list_ptr* current) {
-    const struct new_list_vtable* list = &new_list_vt;
+    const struct new_list_item_vtable* list = &new_list_item_vt;
     /* get current context's head */
     char *str = (*current)->tail->payload;
     list->pop(current);
@@ -202,20 +206,21 @@ void new_print_list_node(readonly_list_ptr* current) {
 
 void new_list_demo() {
     // create list
-    const struct new_list_vtable* list = &new_list_vt;
+    const struct new_list_vtable* list_memory = &new_list_vt;
+    const struct new_list_item_vtable* list = &new_list_item_vt;
 
     // initialize list
-    readonly_list_ptr new_list = list->init();
+    readonly_list_ptr new_list = list_memory->init();
 
     char *str = "Hello, World!\n";
     char *format = "%s";
 
     // isolation mode
-    readonly_list_ptr args = list->init();
+    readonly_list_ptr args = list_memory->init();
     list->push(&args, format);
     list->push(&args, str);
     new_print_list_node(&args);
-    list->destroy(&args);
+    list_memory->destroy(&args);
 
     //no isolation
     list->push(&new_list, format);
@@ -242,5 +247,6 @@ void new_list_demo() {
     list->pop(&new_list);
     void* q_pop4 = new_list->tail->payload;
     list->pop(&new_list);
-    list->destroy(&new_list);
+    
+    list_memory->destroy(&new_list);
 }

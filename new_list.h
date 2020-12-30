@@ -22,14 +22,18 @@ typedef struct new_list {
 struct new_list_vtable {
     /* initialize context */
     readonly_list_ptr (*init)();
-    /* push item on current context (stack) */
-    void (*push)(readonly_list_ptr* const current, void* item);
-    /* pop item on current context (stack) */
-    void (*pop)(readonly_list_ptr* const current);
     /* destroy context */
     void (*destroy)(readonly_list_ptr* const current);
 };
 
+struct new_list_item_vtable {
+    /* push item on current context (stack) */
+    void (*push)(readonly_list_ptr* const current, void* item);
+    /* pop item on current context (stack) */
+    void (*pop)(readonly_list_ptr* const current);
+};
+
 const struct new_list_vtable new_list_vt;
+const struct new_list_item_vtable new_list_item_vt;
 
 #endif
