@@ -43,6 +43,7 @@ void graph_free(readonly_graph_ptr ptr) {
     /* zero all pointers */
     MUTATE_GRAPH_PTR(ptr->prev, 0);
     MUTATE_PTR(ptr->payload, 0);
+    MUTATE_PTR(ptr->child, 0);
 #endif
     /* free pointer */
     free(ptr);
@@ -102,17 +103,19 @@ void graph_pop(readonly_graph_ptr* const current) {
 /* at current context, data payload stored at allocated memory buffer */
 /* as a result, items counter will increase */
 void graph_push_child(readonly_graph_ptr* const current, void* payload) {
+    /* get current context's head */
+    readonly_graph_ptr head = *current;
     /* stores into pre-allocated value newly allocated memory buffer pointer */
-    readonly_graph_ptr ptr = graph_init();
+    readonly_graph_ptr child = graph_init();
     /* sets the new data into allocated memory buffer */
-    MUTATE_PTR(ptr->payload, payload);
+    MUTATE_PTR(child->payload, payload);
     /* pushes new item on top of the stack in current context */
-    /* assigns item's prev pointer to head pointer */
-    MUTATE_GRAPH_PTR(ptr->prev, *current);
-    /* advances position of head pointer to the new head */
-    MUTATE_GRAPH_PTR(*current, ptr);
+    /* assigns child's prev pointer to head pointer */
+    MUTATE_GRAPH_PTR(child->prev, head);
+    MUTATE_GRAPH_PTR(head->child, child);
+    MUTATE_GRAPH_PTR(*current, child);
 #ifdef DEBUG
-    graph_print(ptr);
+    graph_print(head);
 #endif
 }
 
@@ -126,10 +129,10 @@ void graph_pop_child(readonly_graph_ptr* const current) {
     /* if we call method on empty stack, do not return head element, return null element by convention */
     if (head != 0) {
         /* charts */
-        readonly_graph_ptr* child = &head->child;
-        if (*child != 0) {
+        readonly_graph_ptr child = head->child;
+        if (child != 0) {
             /* gets previos pointer */
-            readonly_graph_ptr prev = head->prev;
+            readonly_graph_ptr prev = child->prev;
             /* free current pointer */
             graph_free(head);    
             /* rewinds head pointer to previous pointer value */
@@ -149,10 +152,18 @@ void graph_destroy(readonly_graph_ptr* const current) {
     if (head != 0) {
         /* until we found element with no parent (previous) node */
         do {
-            /* gets previos pointer */           
+            /* gets previos pointer */   
+            if (head->child != 0) {
+                MUTATE_GRAPH_PTR(head, head->child);
+                continue;
+            }        
             readonly_graph_ptr prev = head->prev;
             /* free current pointer */
             graph_free(head);
+            if (prev != 0)
+            {
+                MUTATE_GRAPH_PTR(prev->child, 0);
+            }           
             /* rewinds head pointer to previous pointer value */
             MUTATE_GRAPH_PTR(head, prev);
         } while (head != 0);
@@ -165,7 +176,7 @@ void graph_destroy(readonly_graph_ptr* const current) {
 // print head on current context (stack)
 void graph_print_head(readonly_graph_ptr const current) {
     // visualise item
-    printf("[0x%llx]: 0x%llx\n", (ADDR)current, (ADDR)current->payload);
+    printf("[0x%llx]: 0x%llx (0x%llx) \n", (ADDR)current, (ADDR)current->child, (ADDR)current->payload);
 }
 
 // print all stack trace to output
@@ -184,11 +195,11 @@ void graph_print(readonly_graph_ptr const current) {
         // until we found root element (element with no previous element reference)
         do {
 #ifdef DEBUG
-            // debug output of memory dump
-            printf("%d: 0x%llx 0x%llx\n", ++i, (ADDR)tmp, (ADDR)tmp->payload);
+                // debug output of memory dump
+                printf("%d: 0x%llx (0x%llx) 0x%llx\n", ++i, (ADDR)tmp, (ADDR)tmp->child, (ADDR)tmp->payload);
 #endif
-            // remember temprary's prior pointer value to temporary
-            MUTATE_GRAPH_PTR(tmp, tmp->prev);
+                // remember temprary's prior pointer value to temporary
+                MUTATE_GRAPH_PTR(tmp, tmp->prev);
         } while (tmp != 0);
     }
     // stop on root element
@@ -222,5 +233,31 @@ void graph_demo() {
     print_graph_node(&args);
 
     graph->destroy(&args);
+    graph->destroy(&gr);
+}
+
+void graph_child_demo() {
+    // create graph
+    const struct graph_vtable* graph = &graph_vt;
+
+    // initialize graph
+    readonly_graph_ptr gr = graph->init();
+
+    char *str = "Hello, World!\n";
+    char *format = "%s";
+
+    // isolation mode
+    //readonly_graph_ptr args = graph->init();
+    graph->push_child(&gr, format);
+    graph_print(gr);
+    graph->push_child(&gr, str);
+    graph_print(gr);
+    
+    
+    // graph->push(&args, str);
+    // graph->push(&gr, args);
+    // print_graph_node(&args);
+
+    // graph->destroy(&args);
     graph->destroy(&gr);
 }

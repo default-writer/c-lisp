@@ -12,24 +12,26 @@
 
 extern void list_demo();
 extern void graph_demo();
+extern void graph_child_demo();
 
 int main(int argc, char* argv) {
 
-    str_context ctx = (str_context)calloc(1, sizeof(struct str));
-    ctx->alloc = str_alloc;
-    ctx->run = str_run;
-    ctx->free = str_free;
+    // str_context ctx = (str_context)calloc(1, sizeof(struct str));
+    // ctx->alloc = str_alloc;
+    // ctx->run = str_run;
+    // ctx->free = str_free;
 
-    ctx->self = "Hello, World!\n";
+    // ctx->self = "Hello, World!\n";
 
-    ctx->alloc(ctx);
-    ctx->run(ctx);
-    ctx->free(ctx);
+    // ctx->alloc(ctx);
+    // ctx->run(ctx);
+    // ctx->free(ctx);
 
-    free(ctx);
+    // free(ctx);
 
-    list_demo();
-    graph_demo();
+    // list_demo();
+    // graph_demo();
+    graph_child_demo();
 
     return 0;
 }
